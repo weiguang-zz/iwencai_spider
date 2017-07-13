@@ -10,6 +10,6 @@ RUN pip3 install -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.co
 
 EXPOSE 5000
 
-RUN mkdir logs
+#RUN mkdir logs
 
 CMD ["python", "crawler_job.py", "dev"]

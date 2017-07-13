@@ -49,6 +49,7 @@ email_temp = env.get_template('email_template.html')
 html = email_temp.render(results=results)
 
 logging.info("发送邮件到邮箱%s" % addrs)
+i=0
 while True:
     try:
         subject = config.get('email','subject')
@@ -58,10 +59,12 @@ while True:
         logging.info("发送邮件成功")
         break
     except Exception as e:
+        i += 1
+        if i > 3:
+            break
         print('exception',e)
         sleep(10)
         print('send again')
         format = 'plain'
-        subject = '底部反转，总市值小于30亿+；不包含st；无退市预警；非停牌，非涨停，非创业板，总市值从小到大排名；的股票'
         continue
 

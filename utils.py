@@ -82,23 +82,34 @@ def send_mail(to_list, subject, body, format='plain', attachFileName=None):
         return False
 
 def send_mail_163(to_list, subject, body, format='plain'):
-    try:
-        msg = MIMEText(body, format, 'utf-8')
-        msg['Subject'] = Header(subject, 'utf-8')
+    msg = MIMEText(body, format, 'utf-8')
+    msg['Subject'] = Header(subject, 'utf-8')
 
-        # 报错原因是因为“发件人和收件人参数没有进行定义
-        msg['from'] = '13240811524@163.com'
-        msg['to'] = ";".join(to_list)
+    # 报错原因是因为“发件人和收件人参数没有进行定义
+    msg['from'] = '13240811524@163.com'
+    msg['to'] = ";".join(to_list)
 
-        smtp = smtplib.SMTP()
-        smtp.connect("smtp.163.com")
-        smtp.login("13240811524@163.com", "4306364abc")
-        smtp.sendmail("13240811524@163.com", to_list, msg.as_string())
-        smtp.quit()
-        logging.info('邮件发送成功email has send out !')
-    except Exception as e:
-        logging.error("send mail error", e)
+    smtp = smtplib.SMTP()
+    smtp.connect("smtp.163.com")
+    smtp.login("13240811524@163.com", "4306364abc")
+    smtp.sendmail("13240811524@163.com", to_list, msg.as_string())
+    smtp.quit()
+    logging.info('邮件发送成功email has send out !')
 
+def  send_mail_qq(to_list,subject,body,format='plain'):
+    #lzrcjihuwlfcbbfi
+    msg = MIMEText(body, format, 'utf-8')
+    msg['Subject'] = Header(subject, 'utf-8')
+
+    # 报错原因是因为“发件人和收件人参数没有进行定义
+    msg['from'] = '812674168@qq.com'
+    msg['to'] = ";".join(to_list)
+
+    smtp = smtplib.SMTP_SSL('smtp.qq.com')
+    smtp.login("812674168@qq.com", "lzrcjihuwlfcbbfi")
+    smtp.sendmail("812674168@qq.com", to_list, msg.as_string())
+    smtp.quit()
+    logging.info('邮件发送成功email has send out !')
 
 def set_logconf():
     #获取的是相对于执行路劲的相对目录，如执行python a.python，则ppath是None
@@ -111,6 +122,6 @@ def set_logconf():
 
 if __name__=='__main__':
     set_logconf()
-    send_mail_163(['812674168@qq.com'],'雄安新区打开涨停板的股票',"你好, FYI")
-
+    # send_mail_163(['13240811524@163.com'],'雄安新区打开涨停板的股票',"你好, FYI")
+    send_mail_qq(['812674168@qq.com'],'雄安新区打开涨停板的股票',"你好, FYI")
 

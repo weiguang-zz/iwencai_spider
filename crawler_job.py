@@ -5,6 +5,7 @@ import utils
 import config
 import jinja2
 from jinja2 import Environment,FileSystemLoader
+from time import sleep
 
 utils.set_logconf()
 config.init("conf/config_dev.cfg")
@@ -48,6 +49,19 @@ email_temp = env.get_template('email_template.html')
 html = email_temp.render(results=results)
 
 logging.info("发送邮件到邮箱%s" % addrs)
-utils.send_mail_163(addrs, config.get('email','subject'), html, format='html')
-logging.info("发送邮件成功")
+while True:
+    try:
+        subject = config.get('email','subject')
+        body = html
+        format = 'html'
+        utils.send_mail_qq(addrs, subject, body, format='html')
+        logging.info("发送邮件成功")
+        break
+    except Exception as e:
+        print('exception',e)
+        sleep(10)
+        print('send again')
+        format = 'plain'
+        subject = '底部反转，总市值小于30亿+；不包含st；无退市预警；非停牌，非涨停，非创业板，总市值从小到大排名；的股票'
+        continue
 

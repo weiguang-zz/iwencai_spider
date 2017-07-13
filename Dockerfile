@@ -1,5 +1,15 @@
-FROM centos:7
+FROM python:3
+
+WORKDIR /app
+
+ADD . /app
+
+RUN python --version
 
 RUN pip3 install -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com -r requirements.txt
 
-CMD [ "python3", "/crawler_job.py", 'dev']
+EXPOSE 5000
+
+RUN mkdir logs
+
+CMD ["python", "crawler_job.py", "dev"]

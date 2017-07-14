@@ -6,6 +6,7 @@ import config
 import jinja2
 from jinja2 import Environment,FileSystemLoader
 from time import sleep
+import re
 
 utils.set_logconf()
 config.init("conf/config_dev.cfg")
@@ -34,12 +35,17 @@ for q in questions:
         from lxml import etree
         html = etree.HTML(rval.content)
         elements = html.xpath('//td/div[@class="em graph alignCenter graph"]/a')
-        stock_names = []
+        stocks = []
         for e in elements:
+            stock = {}
             stock_name = e.text
-            stock_names.append(stock_name)
+            stock['name'] = stock_name
 
-        results[q] = stock_names
+            code =  re.search('w=(\d+)', e.attrib['href']).group(1)
+            url = 'http://stockpage.10jqka.com.cn/%s/' % code
+            stock['url'] = url
+            stocks.append(stock)
+        results[q] = stocks
 
 logging.info("选出的iwencai的股票有 %s" % results)
 addrs = config.get('email','receive_email_addr').split(',')
@@ -47,7 +53,6 @@ addrs = config.get('email','receive_email_addr').split(',')
 env = Environment(loader=FileSystemLoader('template'))
 email_temp = env.get_template('email_template.html')
 html = email_temp.render(results=results)
-
 logging.info("发送邮件到邮箱%s" % addrs)
 i=0
 while True:
